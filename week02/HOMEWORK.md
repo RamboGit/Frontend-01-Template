@@ -10,7 +10,6 @@
  console.log(regNumer(1.e+12));
 </script>
 ```
-![图片](/Users/bopumac/Downloads/image.png)
 ## 写一个 UTF-8 Encoding 的函数
 ```
 <script>
