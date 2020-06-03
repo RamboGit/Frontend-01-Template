@@ -12,7 +12,7 @@
 #### 1.2 Selector Grammar 选择器语法
 - <复合选择器>
   - <简单选择器><简单选择器><简单选择器>
-  - * 或者 div 必须写在最前面
+  - '*' 或者 div 必须写在最前面
 - 复杂选择器
   - <复合选择器><sp><复合选择器>
   - <复合选择器>">"<复合选择器>
@@ -28,9 +28,9 @@
 **注:(:not())该选择器不算伪类选择器。(Selectors inside the negation pseudo-class are counted like any other, but the negation itself does not count as a pseudo-class.**
 #### 1.4 combinators
   - sp(空格)
-  - >
-  - +
-  - ~
+  - '>'
+  - '+'
+  - '~'
 ### 2. Pseudo-classes 伪类
 - **Linguistic 语言伪类**
      * :dir()
