@@ -114,7 +114,8 @@
  ##### fixed positioning
 #### 3.4 Layered presentation
 ### 4. display 的取值（[display 取值参考](https://www.w3.org/TR/2020/CR-css-display-3-20200519/)）
-<display-outside>  = block | inline | run-in
+```
+  <display-outside>  = block | inline | run-in
 <display-inside>   = flow | flow-root | table | flex | grid | ruby
 <display-listitem> = <display-outside>? && [ flow | flow-root ]? && list-item
 <display-internal> = table-row-group | table-header-group |
@@ -124,6 +125,7 @@
                      ruby-text-container
 <display-box>      = contents | none
 <display-legacy>   = inline-block | inline-table | inline-flex | inline-grid
+```
 ### 5. 相关术语
 - **block container**
   A block container either contains only inline-level boxes participating in an inline formatting context, or contains only block-level boxes participating in a block formatting context.
