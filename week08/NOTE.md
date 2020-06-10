@@ -12,7 +12,7 @@
 #### 1.2 Selector Grammar 选择器语法
 - <复合选择器>
   - <简单选择器><简单选择器><简单选择器>
-  - * 或者 div 必须写在最前面
+  - '*' 或者 div 必须写在最前面
 - 复杂选择器
   - <复合选择器><sp><复合选择器>
   - <复合选择器>">"<复合选择器>
@@ -28,9 +28,9 @@
 **注:(:not())该选择器不算伪类选择器。(Selectors inside the negation pseudo-class are counted like any other, but the negation itself does not count as a pseudo-class.**
 #### 1.4 combinators
   - sp(空格)
-  - >
-  - +
-  - ~
+  - '>'
+  - '+'
+  - '~'
 ### 2. Pseudo-classes 伪类
 - **Linguistic 语言伪类**
      * :dir()
@@ -114,7 +114,8 @@
  ##### fixed positioning
 #### 3.4 Layered presentation
 ### 4. display 的取值（[display 取值参考](https://www.w3.org/TR/2020/CR-css-display-3-20200519/)）
-<display-outside>  = block | inline | run-in
+```
+  <display-outside>  = block | inline | run-in
 <display-inside>   = flow | flow-root | table | flex | grid | ruby
 <display-listitem> = <display-outside>? && [ flow | flow-root ]? && list-item
 <display-internal> = table-row-group | table-header-group |
@@ -124,6 +125,7 @@
                      ruby-text-container
 <display-box>      = contents | none
 <display-legacy>   = inline-block | inline-table | inline-flex | inline-grid
+```
 ### 5. 相关术语
 - **block container**
   A block container either contains only inline-level boxes participating in an inline formatting context, or contains only block-level boxes participating in a block formatting context.
