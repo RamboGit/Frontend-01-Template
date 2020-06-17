@@ -1,0 +1,367 @@
+<!-- Week1001 homework -->
+<html>
+
+<head>
+<style>
+    ul,li {
+        font-size: 25px;
+    }
+    li {
+        font-size: 15px;
+        color: blueviolet;
+    }
+</style>
+</head>
+
+<body>
+    <script>
+        let names = Object.getOwnPropertyNames(window);
+
+        function filterOut(names, props) {
+            let set = new Set();
+            props.forEach(o => set.add(o));
+            return names.filter(e => !set.has(e));
+        }
+
+        //生成 html 代码
+        function createUlElement(text, objects) {
+            let ul = document.createElement('ul');
+            ul.textContent = text;
+            let range = new Range();
+            let fragment = range.extractContents();
+            while(objects.length){
+                let li = document.createElement('li');
+                li.textContent = objects[objects.length - 1];
+                fragment.append(li);
+                objects.pop();
+            }
+            ul.append(fragment);
+            document.body.append(ul);
+        }
+
+        // ECMA 262相关
+        {
+            let js = new Set();
+            let objects = ["globalThis", "console", "BigInt", "BigInt64Array", "BigUint64Array", "Infinity", "NaN", "undefined", "eval", "isFinite", "isNaN", "parseFloat", "parseInt", "decodeURI", "decodeURIComponent", "encodeURI", "encodeURIComponent", "Array", "Date", "RegExp", "Promise", "Proxy", "Map", "WeakMap", "Set", "WeakSet", "Function", "Boolean", "String", "Number", "Symbol", "Object", "Error", "EvalError", "RangeError", "ReferenceError", "SyntaxError", "TypeError", "URIError", "ArrayBuffer", "SharedArrayBuffer", "DataView", "Float32Array", "Float64Array", "Int8Array", "Int16Array", "Int32Array", "Uint8Array", "Uint16Array", "Uint32Array", "Uint8ClampedArray", "Atomics", "JSON", "Math", "Reflect", "escape", "unescape"];
+            objects.forEach(o => js.add(o));
+            names = names.filter(e => !js.has(e));
+            createUlElement('ECMA 262标准内容API', objects);
+        }
+
+
+        /*获取与 ECMA 402相关内容*/ 
+        //http://www.ecma-international.org/ecma-402/5.0/index.html#Title
+        let ecma402 = names.filter(e => e == "Intl");
+        createUlElement("ECMA 402相关API",ecma402);
+        names = names.filter(e => e != "Intl")
+
+        /*获取与 webkit相关的属性*/
+        let webkitObj = names.filter(e => e.match(/^webkit/));
+        createUlElement('WebKit 相关属性API',webkitObj);
+        names = names.filter(e => !e.match(/^webkit/));
+
+        /*DOM 中的元素构造器*/
+        let windowNode = names.filter( e => {
+            try { 
+                return (window[e].prototype instanceof Node)
+            } catch(err) {
+                return true;
+            }
+        });
+        createUlElement('DOM 中的元素构造器 API',windowNode.concat(['Node']));
+        names = names.filter( e => {
+            try { 
+                return !(window[e].prototype instanceof Node)
+            } catch(err) {
+                return true;
+            }
+        }).filter( e => e != "Node");
+
+        /*Event 相关*/ 
+        let eventObjs = names.filter(e => e.match(/^on/));
+        createUlElement('Event 相关', eventObjs);
+        names = names.filter( e => !e.match(/^on/))
+        
+        
+        
+        /*获取 window 对象上的属性*/ 
+        //https://html.spec.whatwg.org/#window
+        {
+            let names = Object.getOwnPropertyNames(window)
+            let js = new Set();
+            let objects = ["BigInt", "BigInt64Array", "BigUint64Array", "Infinity", "NaN", "undefined", "eval", "isFinite", "isNaN", "parseFloat", "parseInt", "decodeURI", "decodeURIComponent", "encodeURI", "encodeURIComponent", "Array", "Date", "RegExp", "Promise", "Proxy", "Map", "WeakMap", "Set", "WeakSet", "Function", "Boolean", "String", "Number", "Symbol", "Object", "Error", "EvalError", "RangeError", "ReferenceError", "SyntaxError", "TypeError", "URIError", "ArrayBuffer", "SharedArrayBuffer", "DataView", "Float32Array", "Float64Array", "Int8Array", "Int16Array", "Int32Array", "Uint8Array", "Uint16Array", "Uint32Array", "Uint8ClampedArray", "Atomics", "JSON", "Math", "Reflect", "escape", "unescape"];
+            objects.forEach(o => js.add(o));
+            names = names.filter(e => !js.has(e));
+            
+            // names = names.filter( e => {
+            //     try { 
+            //         return !(window[e].prototype instanceof Node)
+            //     } catch(err) {
+            //         return true;
+            //     }
+            // }).filter( e => e != "Node")
+        
+            let windowprops = new Set();
+            objects = [
+                "window",
+                "self",
+                "document",
+                "name", 
+                "location", 
+                "history", 
+                "customElements", 
+                "locationbar", 
+                "menubar", 
+                "personalbar", 
+                "scrollbars", 
+                "statusbar", 
+                "toolbar", 
+                "status", 
+                "close", 
+                "closed", 
+                "stop", 
+                "focus", 
+                "blur", 
+                "frames", 
+                "length", 
+                "top", 
+                "opener", 
+                "parent", 
+                "frameElement", 
+                "open", 
+                "navigator", 
+                "applicationCache", 
+                "alert", 
+                "confirm", 
+                "prompt", 
+                "print", 
+                "postMessage" 
+                ];
+            objects.forEach(o => windowprops.add(o));
+            names = names.filter(e => !windowprops.has(e));
+            /*window 属性相关*/ 
+            let windowpros = [];
+            windowprops.forEach(e => windowpros.push(e));
+            createUlElement('whatwg 中与window属性相关内容',windowpros);
+        }
+        
+        /*spec.whatwg.org 相关*/ 
+        //https://html.spec.whatwg.org/
+        {
+            let interfaces = new Set();
+            objects = ["ApplicationCache", "AudioTrack", "AudioTrackList", "BarProp", "BeforeUnloadEvent", "BroadcastChannel", "CanvasGradient", "CanvasPattern", "CanvasRenderingContext2D", "CloseEvent", "CustomElementRegistry", "DOMStringList", "DOMStringMap", "DataTransfer", "DataTransferItem", "DataTransferItemList", "DedicatedWorkerGlobalScope", "Document", "DragEvent", "ErrorEvent", "EventSource", "External", "FormDataEvent", "HTMLAllCollection", "HashChangeEvent", "History", "ImageBitmap", "ImageBitmapRenderingContext", "ImageData", "Location", "MediaError", "MessageChannel", "MessageEvent", "MessagePort", "MimeType", "MimeTypeArray", "Navigator", "OffscreenCanvas", "OffscreenCanvasRenderingContext2D", "PageTransitionEvent", "Path2D", "Plugin", "PluginArray", "PopStateEvent", "PromiseRejectionEvent", "RadioNodeList", "SharedWorker", "SharedWorkerGlobalScope", "Storage", "StorageEvent", "TextMetrics", "TextTrack", "TextTrackCue", "TextTrackCueList", "TextTrackList", "TimeRanges", "TrackEvent", "ValidityState", "VideoTrack", "VideoTrackList", "WebSocket", "Window", "Worker", "WorkerGlobalScope", "WorkerLocation", "WorkerNavigator"];
+            objects.forEach(o => interfaces.add(o));
+            names = names.filter(e => !interfaces.has(e));
+            createUlElement('what.org 中的HTML相关 API', objects);
+        }
+        
+        
+        //https://www.khronos.org/registry/webgl/specs/latest/1.0/#5.15
+        // WebGL API
+        let latestobjs = ["WebGLVertexArrayObject","WebGLTransformFeedback","WebGLSync","WebGLSampler","WebGLQuery","WebGL2RenderingContext","WebGLContextEvent","WebGLObject", "WebGLBuffer", "WebGLFramebuffer", "WebGLProgram", "WebGLRenderbuffer", "WebGLShader", "WebGLTexture", "WebGLUniformLocation", "WebGLActiveInfo", "WebGLShaderPrecisionFormat", "WebGLRenderingContext"];
+        names = filterOut(names, latestobjs);
+        createUlElement('khronos.org 中 WebGL相关API',latestobjs);
+        
+        //https://www.w3.org/TR/webaudio/
+        //web Audio API
+        let webaudiopropes = ["AudioContext", "AudioNode", "AnalyserNode", "AudioBuffer", "AudioBufferSourceNode", "AudioDestinationNode", "AudioParam", "AudioListener", "AudioWorklet", "AudioWorkletGlobalScope", "AudioWorkletNode", "AudioWorkletProcessor", "BiquadFilterNode", "ChannelMergerNode", "ChannelSplitterNode", "ConstantSourceNode", "ConvolverNode", "DelayNode", "DynamicsCompressorNode", "GainNode", "IIRFilterNode", "MediaElementAudioSourceNode", "MediaStreamAudioSourceNode", "MediaStreamTrackAudioSourceNode", "MediaStreamAudioDestinationNode", "PannerNode", "PeriodicWave", "OscillatorNode", "StereoPannerNode", "WaveShaperNode", "ScriptProcessorNode", "AudioProcessingEvent","OfflineAudioContext", "OfflineAudioCompletionEvent","BaseAudioContext", "AudioScheduledSourceNode", "AudioParamMap"];
+        names = filterOut(names, webaudiopropes);
+        createUlElement('w3c 中 web Audio 相关', webaudiopropes);
+        
+        //https://encoding.spec.whatwg.org/#dom-textencoder
+        let domtextEncoderPropertes = ["TextDecoder", "TextEncoder", "TextDecoderStream", "TextEncoderStream"];
+        names = filterOut(names, domtextEncoderPropertes);
+        createUlElement('whatwg 中 dom-textencoder 相关', domtextEncoderPropertes);
+        
+        
+        //https://streams.spec.whatwg.org/#blqs-class
+        let blgsclss = ["ReadableStream", "ReadableStreamDefaultReader", "ReadableStreamBYOBReader", "ReadableStreamDefaultController", "ReadableByteStreamController", "ReadableStreamBYOBRequest", "WritableStream", "WritableStreamDefaultWriter", "WritableStreamDefaultController", "TransformStream", "TransformStreamDefaultController", "ByteLengthQueuingStrategy", "CountQueuingStrategy"];
+        names = filterOut(names, blgsclss);
+        createUlElement('whatwg 中 Streams 相关', blgsclss);
+
+        //https://fetch.spec.whatwg.org/#fetch-api
+        let fetch = ["fetch"];
+        names = filterOut(names, fetch);
+        createUlElement('whatwg.org 中 fetch相关', fetch);
+        
+        
+       
+        //https://wicg.github.io/BackgroundSync/spec/#sync-manager-interface
+        names = filterOut(names, ["SyncManager"]);
+        createUlElement('Web Background Synchronization',['SyncManager']);
+
+        // createUlElement('其他',names);
+
+        //https://w3c.github.io/media-source/#mediasource
+        names = filterOut(names, ["SourceBufferList","SourceBuffer"]);
+        createUlElement('mediasurce',["SourceBufferList","SourceBuffer"]);
+
+        //https://w3c.github.io/screen-orientation/#screenorientation-interface
+        names = filterOut(names, ["ScreenOrientation"]);
+        createUlElement("screen-orientation", ["ScreenOrientation"]);
+        
+
+        //https://w3c.github.io/webrtc-pc/
+        let webrtc = [ "RTCTrackEvent", "RTCStatsReport", "RTCSessionDescription", "RTCSctpTransport", "RTCRtpTransceiver", "RTCRtpSender", "RTCRtpReceiver", "RTCPeerConnectionIceEvent", "RTCPeerConnectionIceErrorEvent", "RTCPeerConnection", "RTCIceCandidate", "RTCErrorEvent", "RTCError", "RTCDtlsTransport", "RTCDataChannelEvent", "RTCDataChannel", "RTCDTMFToneChangeEvent", "RTCDTMFSender", "RTCCertificate"];
+        names = filterOut(names, webrtc);
+        createUlElement("WebRTC 相关 API", webrtc);
+
+        //https://w3c.github.io/mediacapture-image/#photocapabilities-section
+        let mediacapture = ["PhotoCapabilities"];
+        names = filterOut(names, mediacapture);
+        createUlElement("mediacapture-image", mediacapture);
+
+        //https://w3c.github.io/mediacapture-main/#introduction
+        let madiacaptureMain = ["OverconstrainedError","MediaStreamTrackEvent", "MediaStreamTrack", "MediaStreamEvent", "MediaStream", "MediaSettingsRange", "MediaRecorder", "MediaEncryptedEvent", "MediaCapabilities","InputDeviceInfo", "ImageCapture","CanvasCaptureMediaStreamTrack"];
+        names = filterOut(names, madiacaptureMain);
+        createUlElement("Media Capture and Streams", madiacaptureMain);
+
+        let madiaStreamrecord = ["BlobEvent"];
+
+        //https://wicg.github.io/netinfo/#networkinformation-interface
+        let netinfo = ["NetworkInformation"];
+        names = filterOut(names, netinfo);
+        createUlElement("Networkinformation", netinfo);
+
+        //https://www.w3.org/TR/IndexedDB/
+        let indexedDB = ["IDBVersionChangeEvent", "IDBTransaction", "IDBRequest", "IDBOpenDBRequest", "IDBObjectStore", "IDBKeyRange", "IDBIndex", "IDBFactory", "IDBDatabase", "IDBCursorWithValue", "IDBCursor"];
+        names = filterOut(names, indexedDB);
+        createUlElement('IndexedDB', indexedDB);
+        
+
+        //https://w3c.github.io/geolocation-api/
+        let geolocation = ["GeolocationPositionError", "GeolocationPosition", "GeolocationCoordinates", "Geolocation"];
+        names = filterOut(names, geolocation);
+        createUlElement("GeolocationPosition API", geolocation);
+
+        // https://w3c.github.io/gamepad/extensions.html
+        let Gamepad = ["GamepadHapticActuator", "GamepadEvent", "Gamepad", "GamepadButton"]; 
+        names = filterOut(names, Gamepad);
+        createUlElement("Gamepad Extensions", Gamepad);
+
+        //https://w3c.github.io/battery/
+        let battery = ["BatteryManager"];
+        names = filterOut(names, battery);
+        createUlElement("Battery", battery);
+
+        //https://w3c.github.io/DOM-Parsing/#the-xmlserializer-interface
+        let xmlserializer = ["XMLSerializer"];
+        names = filterOut(names, xmlserializer);
+        createUlElement("xmlserializer API", xmlserializer);
+
+        //https://wicg.github.io/compression/
+        let compression = ["DecompressionStream","CompressionStream"];
+        names = filterOut(names, compression);
+        createUlElement("Compression Streams", compression);
+
+        //https://w3c.github.io/uievents/#events-uievents
+        let uiEvents = [
+            'UIEvent',
+            "FocusEvent",
+            "MouseEvent", 
+            "WheelEvent",
+            "InputEvent",
+            "KeyboardEvent",
+            "CompositionEvent"];
+        names = filterOut(names, uiEvents);
+        createUlElement("UI Events", uiEvents);
+
+
+        //已废弃DOMError
+        let domerror = ["DOMError","BeforeInstallPromptEvent","BlobEvent"];
+        names = filterOut(names, domerror);
+        createUlElement("已废弃该 API", domerror);
+
+        //https://www.w3.org/TR/WebCryptoAPI
+        let crypto = ["Crypto"];
+        names = filterOut(names, crypto);
+        createUlElement("Web Cryptography(加密) API ", crypto);
+
+        //https://www.w3.org/TR/clipboard-apis/ 
+        let clipboard = ["ClipboardItem"];
+        names = filterOut(names, clipboard);
+        createUlElement('Clipboard(剪贴板) API and events', clipboard);
+
+        /**
+         * 1. https://www.w3.org/TR/SVG11/coords.html#InterfaceSVGMatrix
+         *      Coordinate Systems, Transformations and Units
+         * 2. https://www.w3.org/TR/SVG11/types.html#InterfaceSVGUnitTypes 
+         *      Basic Data Types and Interfaces
+         * */
+        let svg = [
+            "SVGPoint", 
+            "SVGPointList", 
+            "SVGMatrix", 
+            "SVGTransform",
+            "SVGTransformList",
+            "SVGAnimatedTransformList", 
+            "SVGPreserveAspectRatio",
+            "SVGAnimatedPreserveAspectRatio",
+            "SVGNumberList", 
+            "SVGNumber", 
+            "SVGLengthList", 
+            "SVGLength", 
+            "SVGAnimatedString", 
+            "SVGAnimatedRect", 
+            "SVGAnimatedPreserveAspectRatio", 
+            "SVGAnimatedNumberList", 
+            "SVGAnimatedNumber", 
+            "SVGAnimatedLengthList", 
+            "SVGAnimatedLength", 
+            "SVGAnimatedInteger", 
+            "SVGAnimatedEnumeration", 
+            "SVGAnimatedBoolean", 
+            "SVGAnimatedAngle", 
+            "SVGAngle",
+        ];
+        names = filterOut(names, svg);
+        createUlElement('SVG 相关 API', svg);
+
+        //XPath 
+        let xpath = ["XPathException", "XPathExceptionCode", "XPathEvaluator", "XPathExpression", "XPathNSResolver", "XPathResult", "XPathNamespace"];
+        names = filterOut(names, xpath);
+        createUlElement('XPath 相关 API', xpath);
+
+        //https://xhr.spec.whatwg.org/
+        let xmlHttpRequest = ["XMLHttpRequestUpload","XMLHttpRequestEventTarget","XMLHttpRequest","FormData","ProgressEvent"];
+        names = filterOut(names, xmlHttpRequest);
+        createUlElement('XMLHttpRequest 相关 API', xmlHttpRequest);
+
+        //https://wicg.github.io/visual-viewport/#extensions-to-the-window-interface
+        //Visual Viewport API
+        let viewport = ["VisualViewport"];
+        names = filterOut(names, viewport);
+        createUlElement('Visual Viewport API', viewport);
+
+        //https://w3c.github.io/webvtt/#dom-vttcue-vttcue
+        //WebVTT: The Web Video Text Tracks Format
+        let webvtt = ["VTTCue", "VTTRegion"];
+        names = filterOut(names, webvtt);
+        createUlElement('he Web Video Text Tracks Format API', webvtt);
+
+        //https://url.spec.whatwg.org/#urlsearchparams
+        let url = ["URL", "URLSearchParams"];
+        names = filterOut(names, url);
+        createUlElement('URL API', url);
+        /* 
+        
+        let ul = document.createElement('ul');
+        let range = new Range();
+        let fragment = range.extractContents();
+        while (names.length) {
+            let li = document.createElement('li');
+            li.textContent = names[names.length - 1];
+            fragment.append(li);
+            names.pop();
+        }
+        ul.append(fragment);
+        let title = document.createElement('div');
+        title.textContent = '总条数：' + ul.children.length;
+        document.body.append(title);
+        document.body.append(ul);
+        */
+        console.log(names.length,names.toString(),names);
+    </script>
+</body>
+
+</html>
