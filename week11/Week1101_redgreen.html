@@ -1,0 +1,142 @@
+<style>
+    div {
+        display: inline-block;
+        margin: 30px;
+        width: 80px;
+        height: 80px;
+        border-radius: 40px;
+        background: grey;
+    }
+
+    .red.light{
+        background: red;
+    }
+
+    .green.light {
+        background: green;
+    }
+
+    .yellow.light{
+        background: yellow;
+    }
+
+</style>
+<div class="green"></div>
+<div class="yellow"></div>
+<div class="red"></div>
+<button id="next">next</button>
+
+<script>
+    function red() {
+        var lights = document.getElementsByTagName("div");
+        for(var i = 0; i < 3; i++) 
+            lights[i].classList.remove('light')
+        document.getElementsByClassName('red')[0].classList.add('light');
+    }
+    function green() {
+        var lights = document.getElementsByTagName("div");
+        for(var i = 0; i < 3; i++) 
+            lights[i].classList.remove('light')
+        document.getElementsByClassName('green')[0].classList.add('light');
+    }
+    function yellow() {
+        var lights = document.getElementsByTagName("div");
+        for(var i = 0; i < 3; i++) 
+            lights[i].classList.remove('light')
+        document.getElementsByClassName('yellow')[0].classList.add('light');
+    }
+    
+    /**
+     * 解法-嵌套 setTimeout
+     * */
+    
+   /*  function go(){
+        green();
+        setTimeout(function(){
+            yellow();
+            setTimeout(function() {
+                red();
+                setTimeout(function() {
+                    go();
+                }, 3000);
+            }, 2000);
+        }, 2000);
+    }
+    go(); */
+
+    /**
+     * 解法二：Promise + setTimeout 方式
+     * */
+    
+   /* function createPromise(colorFunc, time) {
+        return new Promise((resolve, reject) => {
+            colorFunc();
+            setTimeout(resolve, time);
+        });
+   }
+
+   function go() {
+        createPromise(green,1000)
+        .then(()=> {
+            createPromise(yellow, 2000)
+            .then(()=> {
+                createPromise(red, 3000)
+                .then(()=> {
+                    go();
+                })
+            })
+        });
+    } */
+
+
+    /**
+     * 解法三： async await
+     * */ 
+    /* function resolveAfter(colorFunc, time) {
+        return new Promise((resolve, reject) => {
+            setTimeout(resolve, time);
+        })
+    }
+    async function go(){
+        while(true){
+            green()
+            await resolveAfter(1000); 
+            yellow();
+            await resolveAfter(2000);
+            red();
+            await resolveAfter(3000);
+            go();
+        }
+    } */
+
+    /**
+     * 手动控制 
+     * */ 
+    /* function happen(element, eventName) {
+        return new Promise((resolve, reject) => {
+            element.addEventListener(eventName, resolve);
+        });
+    };
+
+    async function go() {
+        while(true) {
+            green();
+            await happen(document.getElementById('next'), 'click');
+            yellow();
+            await happen(document.getElementById('next'), 'click');
+            red();
+            await happen(document.getElementById('next'), 'click');
+            go();
+        }
+    } */
+
+    /**
+     * generator 版本
+     * */ 
+    function* go() {
+        yield green();;
+        yield yellow();
+        yield red();
+    }
+   
+</script>
