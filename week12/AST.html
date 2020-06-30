@@ -1,0 +1,163 @@
+<!-- 
+ * FSA: 有限自动机
+ * NFA: 非确定性的有限自动机（Nondeterministic Finite Automaton）
+ * DFA: 确定的有限自动机 （Deterministic Finite Automaton）
+ * 
+ * 
+ * 自顶向下分析算法 ： 从一个非终结符出发，逐步推导出跟被解析的程序相同的 Token 串。
+ * 
+ * LL算法：预测性的算法，第一个 L,是Left-to-right,代表从左向右处理程序代码，第二 L,是 Leftmost，意思是最左推导
+ * 
+ -->
+<script>
+    // 第一步词法分析
+    /*function tokenize(source) {
+        var result = null;
+        var lastIndex = 0;
+        do {
+            lastIndex = regexp.lastIndex;
+            result = regexp.exec(source);
+            if(!result) {
+                break;
+            }
+            console.log(result);
+            for(let i = 0; i < dictionary.length; i++) {
+                //备注：为什么加一，是因为括号中的分组捕获是从[1]...[n],[0]匹配的全部字符串 
+                if(result[i + 1]) { 
+                    console.log(dictionary[i]);
+                }
+            }
+        } while(result);
+    }*/
+        var regexp = /([0-9\.]+)|([ \t\n\r]+)|([\r\n]+)|(\*)|(\/)|(\+)|(\-)/g;
+        var dictionary = ["Number", "whitespace", "LineTerminator", "*", "/", "+", "-"];
+
+        //语法分析
+        function* tokenize(source) {
+            var result = null;
+            var lastIndex = 0;
+            do {
+                lastIndex = regexp.lastIndex;  //记录下次查找的位置
+                result = regexp.exec(source);
+                if (!result) break;
+
+                let token = {
+                    type: null,
+                    value: null
+                }
+
+                for (let i = 0; i < dictionary.length; i++) {
+                    if (result[i + 1]) {
+                        token.type = dictionary[i];
+                    }
+                }
+                token.value = result[0];
+                yield token;
+            } while (result);
+            yield { type: "EOF" };
+        }
+
+        let source = [];
+        for(let token of tokenize("1 + 2 * 5 + 3")) {
+            if(token.type !== "whitespace" && token.type !== "LineTerminator") {
+                source.push(token);
+            }
+        }
+
+        function Expression(tokens) {
+            if(source[0].type === "AdditiveExpression" && source[1] && source[1].type === "EOF") {
+                let node = {
+                    type: "Expression",
+                    children: [source.shift(), source.shift()]
+                }
+                source.unshift(node);
+                return node;
+            }
+            AdditiveExpression(source);
+            return Expression(source);
+        }
+
+        function AdditiveExpression(source) {
+            if(source[0].type === "MultiplicativeExpression") {
+                let node = {
+                    type : "AdditiveExpression",
+                    children: [source[0]]
+                };
+                source[0]= node;
+                return AdditiveExpression(source);
+            }
+            if(source[0].type === "AdditiveExpression" && source[1] && source[1].type === "+") {
+                let node = {
+                    type: "AdditiveExpression",
+                    operator: "+",
+                    children: []
+                };
+                node.children.push(source.shift());
+                node.children.push(source.shift());
+                MultiplicativeExpression(source);
+                node.children.push(source.shift());
+                source.unshift(node);
+                return AdditiveExpression(source);
+            }
+            if(source[0].type === "AdditiveExpression" && source[1] && source[1].type === "-") {
+                let node = {
+                    type: "AdditiveExpression",
+                    operator: "-",
+                    children: []
+                };
+                node.children.push(source.shift());
+                node.children.push(source.shift());
+                MultiplicativeExpression(source);
+                node.children.push(source.shift());
+                source.unshift(node);
+                return AdditiveExpression(source);
+            }
+            if(source[0].type === "AdditiveExpression") {
+                return source[0];
+            }
+            MultiplicativeExpression(source);
+            return AdditiveExpression(source);
+        }
+
+        function MultiplicativeExpression(source){
+            if(source[0].type === "Number") {
+                let node = {
+                    type: "MultiplicativeExpression",
+                    children: [source[0]]
+                };
+                source[0] = node;
+                return MultiplicativeExpression(source);
+            }
+            if(source[0].type === "MultiplicativeExpression" && source[1] && source[1].type === "*") {
+                let node = {
+                    type: "MultiplicativeExpression",
+                    operator: "*",
+                    children: []
+                };
+                node.children.push(source.shift());
+                node.children.push(source.shift());
+                node.children.push(source.shift());
+                source.unshift(node);
+                return MultiplicativeExpression(source);
+            }
+            if(source[0].type === "MultiplicativeExpression" && source[1] && source[1].type === "/") {
+                let node = {
+                    type: "MultiplicativeExpression",
+                    operator: "-",
+                    children: []
+                };
+                node.children.push(source.shift());
+                node.children.push(source.shift());
+                node.children.push(source.shift());
+                source.unshift(node);
+                return MultiplicativeExpression(source);
+            }
+            if(source[0].type === "MultiplicativeExpression") {
+                return source[0];
+            }
+            return MultiplicativeExpression(source);
+        }
+
+        console.log(Expression(source));
+            
+</script>

@@ -1,0 +1,54 @@
+<script>
+/**
+ * kmp
+*/
+
+function find(source, pattern) {
+    for (let i = 0; i < source.length; i++) {
+        let matched = true;
+        for(let j = 0; j < pattern.length; j++) {
+            console.log(source[i + j],pattern[j]);
+            if (source[i + j] !== pattern[j]) {
+                matched = false;
+                break;
+            }
+        }
+        if (matched) return true;
+    }
+    return false;
+}
+ /**
+  * 部分匹配表
+  * 移动位数 = 已匹配的字符数 - 对应的部分匹配值
+  * 《部分匹配表》是如何产生的
+  *     "前缀" 指除了最后一个字符串以外，一个字符串的全部头部组合
+  *     "后缀" 指除了第一个字符以外，一个字符串的全部尾部组合
+  *     "部分匹配值"就是"前缀"和"后缀"的最长共有元素的高度。
+ */
+function kmpfind(source, pattern) {
+   
+    //生成部分匹配表
+    let table = new Array(pattern.length).fill(0);
+    for(let j = 1; j < pattern.length; j++) {
+        console.log(pattern[j], pattern[k]);
+        if(pattern[j] === pattern[k]) {
+            k++;     
+            table[j] = k;   
+        }
+    }
+
+    //根据匹配表的值获取移位
+    let j = 0;
+    for(let i = 0; j < source.length; i++) {
+        console.log(source[i], pattern[j], j);
+        if(source[i]=== pattern[j]) {
+            j++;
+        } else {
+            j = 0;
+        }
+        if(j === pattern.length) return true;
+    }
+    return false;
+}
+
+</script>
