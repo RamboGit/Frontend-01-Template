@@ -52,11 +52,11 @@ input.getAttribute('value');  //cute
 ### Lifecycle
 * create
   * mount
-  *unmount
+  * unmount
 * JS change/set
-*User Input
+* User Input
   * render/update
-*destroyed
+* destroyed
 ### Children
 * Content 型 Children 与 Template 型 Children
 ```
