@@ -129,7 +129,7 @@ class Carousel {
 
             setTimeout(nextPic, 3000);
         }
-        //  setTimeout(nextPic, 3000);
+         setTimeout(nextPic, 3000);
         this.addEventListener("mousedown", event => {
             let startX = event.clientX, startY = event.clientY;
 

@@ -1,0 +1,26 @@
+<style>
+    #el {
+        width: 100px;
+        height: 100px;
+        background-color: skyblue;
+    }
+</style>
+<div id="el">
+
+</div>
+<script>
+    let el = document.getElementById('el');
+    el.style.transition = 'ease 10s';
+
+    function start() {
+        el.style.transform = 'translate(300px, 300px)';
+    }
+
+    function stop() {
+        console.log(getComputedStyle(el).transform);
+        el.style.transition = 'none';
+        // el.style.transform = getComputedStyle(el).transform;
+        el.style.transform = `translate(${getBoundingRect(el)})`;
+    }
+
+</script>
