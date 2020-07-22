@@ -3,7 +3,7 @@
 - 轮播图片定时轮播
 - 轮播组件通过手势可左右滑动
 -  解决自动轮播与手势滑动冲突问题
-- 修改后的文件地址：
+- 修改后的文件地址：[main.js](https://github.com/RamboGit/Frontend-01-Template/blob/master/week15/AnimationCarousel/main.js)
 
 ### 定时轮播修改后主要代码如下：
 ```
